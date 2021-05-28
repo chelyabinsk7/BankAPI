@@ -12,6 +12,7 @@ public class ContractorService {
 
     private ContractorDAO contractorDAO;
 
+
     @Autowired
     public ContractorService (ContractorDAO theContractorDAO) {
         contractorDAO = theContractorDAO;
