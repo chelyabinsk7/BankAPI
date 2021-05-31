@@ -1,20 +1,19 @@
 package ru.zhenyaak.bankAPI.entity;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name="test")
 public class Test {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
     private int age;
 
     public Test() {
 
+    }
+
+    public Test(int id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
     }
 
     public int getId() {

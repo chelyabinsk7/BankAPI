@@ -1,17 +1,13 @@
 package ru.zhenyaak.bankAPI.DAO;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import javax.persistence.EntityManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 @Repository
-public class ContractorDAO {
+public class EmployeeDAO {
 
     private static final String URL = "jdbc:h2:file:/Users/u19215200/Documents/bankAPI/src/main/resources/data/bank;AUTO_SERVER=true";
     private static final String USERNAME = "Eugeny";

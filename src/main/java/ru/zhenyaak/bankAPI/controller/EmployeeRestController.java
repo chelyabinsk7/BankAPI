@@ -1,4 +1,4 @@
 package ru.zhenyaak.bankAPI.controller;
 
-public class ClientController {
+public class EmployeeRestController {
 }
