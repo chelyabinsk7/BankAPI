@@ -39,4 +39,13 @@ public class Contractor {
     public void setInn(String inn) {
         this.inn = inn;
     }
+
+    @Override
+    public String toString() {
+        return "Contractor{" +
+                "id_contractor=" + id_contractor +
+                ", name='" + name + '\'' +
+                ", inn='" + inn + '\'' +
+                '}';
+    }
 }

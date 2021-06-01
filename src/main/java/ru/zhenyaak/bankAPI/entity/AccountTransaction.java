@@ -10,14 +10,14 @@ public class AccountTransaction {
     int id_to;
     BigDecimal amount;
     Timestamp time;
-    char status_transaction;
+    String status_transaction;
     String message;
 
     public AccountTransaction(){
 
     }
 
-    public AccountTransaction(int id, int id_from, int id_to, BigDecimal amount, Timestamp time, char status_transaction, String message) {
+    public AccountTransaction(int id, int id_from, int id_to, BigDecimal amount, Timestamp time, String status_transaction, String message) {
         this.id = id;
         this.id_from = id_from;
         this.id_to = id_to;
@@ -67,11 +67,11 @@ public class AccountTransaction {
         this.time = time;
     }
 
-    public char getStatus_transaction() {
+    public String getStatus_transaction() {
         return status_transaction;
     }
 
-    public void setStatus_transaction(char status_transaction) {
+    public void setStatus_transaction(String status_transaction) {
         this.status_transaction = status_transaction;
     }
 

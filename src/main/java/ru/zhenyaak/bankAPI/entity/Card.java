@@ -20,7 +20,7 @@ public class Card {
         this.status_card = status_card;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -37,7 +37,7 @@ public class Card {
         this.number = number;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public int getId_account() {
         return id_account;
     }
@@ -52,5 +52,15 @@ public class Card {
 
     public void setStatus_card(String status_card) {
         this.status_card = status_card;
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", id_account=" + id_account +
+                ", status_card='" + status_card + '\'' +
+                '}';
     }
 }

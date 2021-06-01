@@ -9,8 +9,8 @@ DROP TABLE IF EXISTS test;
 
 CREATE TABLE owners(
     id IDENTITY NOT NULL PRIMARY KEY,
-    type_owner CHAR(1) NOT NULL,
-    CHECK (type_owner IN ('F', 'U'))
+    type_owner VARCHAR(3) NOT NULL,
+    CHECK (type_owner IN ('FIZ', 'UR'))
 );
 
 CREATE TABLE persons(
@@ -53,9 +53,9 @@ CREATE TABLE accountTransactions(
     id_to INT NOT NULL,
     amount DECIMAL,
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
-    status_transaction CHAR(1) DEFAULT NULL,
+    status_transaction VARCHAR(3) DEFAULT NULL,
     message VARCHAR(255) DEFAULT NULL,
-    CHECK (status_transaction IN ('Y', 'N', NULL)),
+    CHECK (status_transaction IN ('YES', 'NO', NULL)),
     FOREIGN KEY (id_from) REFERENCES accounts(id) ON UPDATE CASCADE,
     FOREIGN KEY (id_to) REFERENCES accounts(id) ON UPDATE CASCADE
 );

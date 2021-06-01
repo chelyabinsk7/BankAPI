@@ -1,11 +1,11 @@
-INSERT INTO OWNERS (TYPE_OWNER) VALUES ('F'),
-                                       ('F'),
-                                       ('F'),
-                                       ('F'),
-                                       ('F'),
-                                       ('U'),
-                                       ('U'),
-                                       ('U');
+INSERT INTO OWNERS (TYPE_OWNER) VALUES ('FIZ'),
+                                       ('FIZ'),
+                                       ('FIZ'),
+                                       ('FIZ'),
+                                       ('FIZ'),
+                                       ('UR'),
+                                       ('UR'),
+                                       ('UR');
 
 INSERT INTO PERSONS (id_person, FIRSTNAME, LASTNAME, BIRTHDAY) VALUES(1, 'Eugeny', 'Avdeev', '1995-06-23'),
                                                                       (2, 'Stas', 'Sviridov', '1992-09-11'),
