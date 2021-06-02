@@ -2,11 +2,9 @@ package ru.zhenyaak.bankAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.zhenyaak.bankAPI.controller.exceptions.PersonNotFoundException;
-import ru.zhenyaak.bankAPI.entity.Card;
-import ru.zhenyaak.bankAPI.entity.Contractor;
-import ru.zhenyaak.bankAPI.entity.Person;
-import ru.zhenyaak.bankAPI.entity.Test;
+import ru.zhenyaak.bankAPI.DAO.ContractorDAO;
+import ru.zhenyaak.bankAPI.controller.exceptions.contractor.ContractorNotFoundException;
+import ru.zhenyaak.bankAPI.entity.*;
 import ru.zhenyaak.bankAPI.service.ContractorService;
 
 import java.util.List;
@@ -15,37 +13,59 @@ import java.util.List;
 @RequestMapping("/contractor")
 public class ContractorRestController {
 
-    @Autowired
-    private ContractorService contractorService;
+    private final ContractorService contractorService;
 
-//    http://localhost:8080/contractor/newcontractor
-//    {
-//        "name": "Sberbank",
-//        "inn": "8888222200"
-//    }
+    @Autowired
+    public ContractorRestController(ContractorService contractorService) {
+        this.contractorService = contractorService;
+    }
+
+    /*
+    http://localhost:8080/contractor/newcontractor
+    {
+        "name": "Sberbank",
+        "inn": "8888222200"
+    }
+    */
     @PostMapping("/newcontractor")
     public Contractor createNewContractor(@RequestBody Contractor contractor) {
         return contractorService.createNewContractor(contractor);
     }
 
-//    http://localhost:8080/contractor/allcontractors
-//    @GetMapping("/allcontractors")
-//    public List<Card> allContractors() {
-//        return contractorService.getAllCards();
-//    }
-
-    @GetMapping("/owner")
-    public void createOwner(){
-        contractorService.newOwner();
+/*
+http://localhost:8080/contractor/allcontractors
+ */
+    @GetMapping("/allcontractors")
+    public List<Contractor> allContractors() {
+        return contractorService.getAllContractors();
     }
 
-    //    http://localhost:8080/contractor/id/6
+//    @GetMapping("/owner")
+//    public void createOwner(){
+//        contractorService.newOwner();
+//    }
+
+/*
+http://localhost:8080/contractor/id/6
+ */
     @GetMapping("/id/{id_contractor}")
     public Contractor getContractor(@PathVariable int id_contractor){
         Contractor contractor = contractorService.getContractor(id_contractor);
-        System.out.println(contractor);
-//        if (contractor.getId_contractor() == 0)
-//            throw new PersonNotFoundException("Contractor with id_contractor = " + id_contractor + " not found");
+        if (contractor.getId_contractor() == 0)
+            throw new ContractorNotFoundException("Contractor with id_contractor = " + id_contractor + " not found");
         return contractor;
+    }
+
+/*
+http://localhost:8080/contractor/refill
+{
+    "id_from": 8,
+    "id_to": 10,
+    "amount": "100.9"
+}
+ */
+    @PostMapping("/refill")
+    public AccountTransaction refill(@RequestBody AccountTransaction accountTransaction){
+        return contractorService.refill(accountTransaction);
     }
 }

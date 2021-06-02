@@ -4,31 +4,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zhenyaak.bankAPI.DAO.ContractorDAO;
-import ru.zhenyaak.bankAPI.entity.Card;
-import ru.zhenyaak.bankAPI.entity.Contractor;
-import ru.zhenyaak.bankAPI.entity.Test;
+import ru.zhenyaak.bankAPI.DAO.EmployeeDAO;
+import ru.zhenyaak.bankAPI.entity.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class ContractorService {
 
-    @Autowired
-    private ContractorDAO contractorDAO;
+    private final ContractorDAO contractorDAO;
 
-    @Transactional
-    public Contractor createNewContractor(Contractor contractor) {
-        int id_owner = contractorDAO.createNewOwner();
-        contractorDAO.createNewContractor(contractor, id_owner);
-        return contractorDAO.getContractor(id_owner);
+    @Autowired
+    public ContractorService (ContractorDAO contractorDAO){
+        this.contractorDAO = contractorDAO;
     }
 
-    public int newOwner(){
-        return contractorDAO.createNewOwner();
+    public Contractor createNewContractor(Contractor contractor) {
+        return contractorDAO.getContractor(contractorDAO.createNewContractor(contractor));
     }
 
     public Contractor getContractor(int id_contractor) {
-        Contractor contractor = contractorDAO.getContractor(id_contractor);
-        return contractor;
+        return contractorDAO.getContractor(id_contractor);
+    }
+
+    public List<Contractor> getAllContractors() {
+        return contractorDAO.getAllContractors();
+    }
+
+    public AccountTransaction refill(AccountTransaction accountTransaction){
+        return contractorDAO.refill(accountTransaction);
     }
 }

@@ -42,8 +42,8 @@ CREATE TABLE cards(
     id IDENTITY NOT NULL PRIMARY KEY,
     number VARCHAR(16) NOT NULL UNIQUE,
     id_account INT,
-    status_card VARCHAR(5) DEFAULT 'OPEN',
-    CHECK (status_card IN ('OPEN', 'CLOSE')),
+    status_card VARCHAR(7) DEFAULT 'CREATED',
+    CHECK (status_card IN ('CREATED', 'OPEN', 'CLOSE')),
     FOREIGN KEY (id_account) REFERENCES accounts (id) ON UPDATE CASCADE
 );
 

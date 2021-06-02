@@ -1,4 +1,4 @@
-package ru.zhenyaak.bankAPI.controller.exceptions;
+package ru.zhenyaak.bankAPI.controller.exceptions.person;
 
 public class PersonNotFoundException extends RuntimeException{
 

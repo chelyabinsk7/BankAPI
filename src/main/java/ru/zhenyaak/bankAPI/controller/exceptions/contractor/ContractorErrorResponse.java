@@ -1,15 +1,15 @@
-package ru.zhenyaak.bankAPI.controller.exceptions;
+package ru.zhenyaak.bankAPI.controller.exceptions.contractor;
 
-public class PersonErrorResponse {
+public class ContractorErrorResponse {
     private int status;
     private String message;
     private long timestamp;
 
-    public PersonErrorResponse() {
+    public ContractorErrorResponse() {
 
     }
 
-    public PersonErrorResponse(int status, String message, long timestamp) {
+    public ContractorErrorResponse(int status, String message, long timestamp) {
         this.status = status;
         this.message = message;
         this.timestamp = timestamp;

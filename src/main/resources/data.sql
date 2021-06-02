@@ -28,11 +28,11 @@ INSERT INTO ACCOUNTS (NUMBER, ID_OWNER, BALANCE) VALUES ('12635678901234567897',
 INSERT INTO ACCOUNTS (NUMBER, ID_OWNER, BALANCE) VALUES ('12345678901234367898', 7, 8000);
 INSERT INTO ACCOUNTS (NUMBER, ID_OWNER) VALUES ('12345678961234567899', 8);
 
-INSERT INTO CARDS (NUMBER, ID_ACCOUNT) VALUES ('1234567812345677', 1),
-                                              ('1234567812345678', 1),
-                                              ('1234567812345679', 1),
-                                              ('1234567887654321', 3),
-                                              ('1234567891234567', 5);
+INSERT INTO CARDS (NUMBER, ID_ACCOUNT, STATUS_CARD) VALUES ('1234567812345677', 1, 'OPEN'),
+                                              ('1234567812345678', 1, 'CREATED'),
+                                              ('1234567812345679', 1, 'CLOSE'),
+                                              ('1234567887654321', 3, 'OPEN'),
+                                              ('1234567891234567', 5, 'OPEN');
 
 INSERT INTO ACCOUNTTRANSACTIONS (ID_FROM, ID_TO, AMOUNT) VALUES (1, 2, 1000),
                                                                 (1, 2, 299.9),

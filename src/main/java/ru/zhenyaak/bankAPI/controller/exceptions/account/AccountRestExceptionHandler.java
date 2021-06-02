@@ -1,4 +1,4 @@
-package ru.zhenyaak.bankAPI.controller.exceptions;
+package ru.zhenyaak.bankAPI.controller.exceptions.account;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class PersonRestExceptionHandler {
+public class AccountRestExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<PersonErrorResponse>
-    handleException(PersonNotFoundException exc){
+    public ResponseEntity<CardErrorResponse>
+    handleException(AccountNotFoundException exc){
 
-        PersonErrorResponse error = new PersonErrorResponse(
+        CardErrorResponse error = new CardErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exc.getMessage(),
                 System.currentTimeMillis());
@@ -21,10 +21,10 @@ public class PersonRestExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<PersonErrorResponse>
+    public ResponseEntity<CardErrorResponse>
     handleException(Exception exc){
 
-        PersonErrorResponse error = new PersonErrorResponse(
+        CardErrorResponse error = new CardErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 exc.getMessage(),
                 System.currentTimeMillis());
