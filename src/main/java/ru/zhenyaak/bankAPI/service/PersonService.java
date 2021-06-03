@@ -2,6 +2,7 @@ package ru.zhenyaak.bankAPI.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zhenyaak.bankAPI.DAO.PersonDAO;
 import ru.zhenyaak.bankAPI.entity.*;
 
@@ -53,4 +54,10 @@ public class PersonService {
     public BigDecimal getAccountBalance(int id) {
         return personDAO.getAccount(id).getBalance();
     }
+
+//    @Transactional
+//    public void insert(){
+//        personDAO.insert1();
+//        personDAO.insert2();
+//    }
 }

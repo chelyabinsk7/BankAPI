@@ -1,6 +1,7 @@
 package ru.zhenyaak.bankAPI.entity;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Account {
 
@@ -60,5 +61,29 @@ public class Account {
 
     public void setStatus_account(String status_account) {
         this.status_account = status_account;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", id_owner=" + id_owner +
+                ", balance=" + balance +
+                ", status_account='" + status_account + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id == account.id && id_owner == account.id_owner && Objects.equals(number, account.number) && Objects.equals(balance, account.balance) && Objects.equals(status_account, account.status_account);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, id_owner, balance, status_account);
     }
 }

@@ -2,18 +2,17 @@ package ru.zhenyaak.bankAPI.DAO;
 
 import org.springframework.stereotype.Repository;
 import ru.zhenyaak.bankAPI.controller.exceptions.account.AccountNotFoundException;
+import ru.zhenyaak.bankAPI.controller.exceptions.card.CardNotFoundException;
+import ru.zhenyaak.bankAPI.controller.exceptions.person.PersonNotFoundException;
 import ru.zhenyaak.bankAPI.entity.*;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class PersonDAO {
-
-    private static final String URL = "jdbc:h2:file:/Users/u19215200/Documents/bankAPI/src/main/resources/data/bank;AUTO_SERVER=true";
-    private static final String USERNAME = "Eugeny";
-    private static final String PASSWORD = "12345678";
 
     static{
         try {
@@ -23,12 +22,162 @@ public class PersonDAO {
         }
     }
 
+    private DataSource dataSource;
+
+    public PersonDAO(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
+
+
+    public Person getPerson(int id_person){
+        Person person = null;
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT * FROM Persons WHERE id_person = ?")){
+                preparedStatement.setInt(1, id_person);
+                ResultSet rs = preparedStatement.executeQuery();
+                rs.next();
+                person = new Person();
+                person.setId_person(rs.getInt("id_person"));
+                person.setFirstName(rs.getString("firstname"));
+                person.setLastName(rs.getString("lastname"));
+                person.setBirthday(rs.getDate("birthday"));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                throw new PersonNotFoundException("Person with id_person = " + id_person + " not found. More details: " + throwables);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return person;
+    }
+
+    public Account getAccount(int id){
+        Account account = null;
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT * FROM Accounts WHERE id = ?")){
+                preparedStatement.setInt(1, id);
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    rs.next();
+                    account = new Account();
+                    account.setId(rs.getInt("id"));
+                    account.setNumber(rs.getString("number"));
+                    account.setId_owner(rs.getInt("id_owner"));
+                    account.setBalance(rs.getBigDecimal("balance"));
+                    account.setStatus_account(rs.getString("status_account"));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                throw new AccountNotFoundException("Account with id = " + id + " not found. More details: " + throwables);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return account;
+    }
+
+    public Card getCard(int id){
+        Card card = null;
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT * FROM Cards WHERE id = ?")){
+                preparedStatement.setInt(1, id);
+                ResultSet rs = preparedStatement.executeQuery();
+                rs.next();
+                card = new Card();
+                card.setId(rs.getInt("id"));
+                card.setNumber(rs.getString("number"));
+                card.setId_account(rs.getInt("id_account"));
+                card.setStatus_card(rs.getString("status_card"));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                throw new CardNotFoundException("Card with id = " + id + " not found. More details" + throwables);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return card;
+    }
+
+    public List<Card> getAllCards(){
+        List<Card> list = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM cards")){
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    while (rs.next())
+                        list.add(new Card(rs.getInt("id"),
+                                          rs.getString("number"),
+                                          rs.getInt("id_account"),
+                                          rs.getString("status_card")));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return list;
+    }
+
+    public List<Card> getMyCards(int id_person){
+        List<Card> list = new ArrayList<>();
+        Person person = null;
+        try (Connection connection = dataSource.getConnection()){
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT * FROM Persons WHERE id_person = ?")){
+                preparedStatement.setInt(1, id_person);
+                ResultSet rs = preparedStatement.executeQuery();
+                rs.next();
+                person = new Person();
+                person.setId_person(rs.getInt("id_person"));
+                person.setFirstName(rs.getString("firstname"));
+                person.setLastName(rs.getString("lastname"));
+                person.setBirthday(rs.getDate("birthday"));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                throw new PersonNotFoundException("Person with id_person = " + id_person + " not found. More details: " + throwables);
+            }
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT c.id, c.number, c.id_account, c.status_card FROM persons AS p " +
+                            "INNER JOIN accounts AS a ON a.id_owner = p.id_person " +
+                            "INNER JOIN cards AS c ON c.id_account = a.id " +
+                            "WHERE p.id_person = ?")){
+                preparedStatement.setInt(1, id_person);
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    if (rs.next()){
+                        do {
+                            list.add(new Card(rs.getInt("id"),
+                                    rs.getString("number"),
+                                    rs.getInt("id_account"),
+                                    rs.getString("status_card")));
+                        } while (rs.next());
+                    }
+                    else
+                        throw new CardNotFoundException("Person with id_person = " + id_person + " has no cards");
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return list;
+    }
+
     public AccountTransaction refill(AccountTransaction accountTransaction){
         Account account_from = null;
         Account account_to = null;
         int id_transaction = 0;
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+        try (Connection connection = dataSource.getConnection()){
             connection.setAutoCommit(false);
 
             try (PreparedStatement preparedStatement = connection.prepareStatement
@@ -143,7 +292,7 @@ public class PersonDAO {
     }
 
     public Card createNewCard(Card card){
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+        try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement
                     ("INSERT INTO cards (number, id_account) VALUES (?, ?)")){
                 preparedStatement.setString(1, card.getNumber());
@@ -173,7 +322,7 @@ public class PersonDAO {
 
     public AccountTransaction newAccountTransaction(AccountTransaction accountTransaction, String status_transaction, String message){
         int id_transaction = 0;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+        try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement
                     ("INSERT INTO accountTransactions (id_from, id_to, amount, status_transaction, message) VALUES (?, ?, ?, ?, ?)",
                             Statement.RETURN_GENERATED_KEYS)){
@@ -215,139 +364,25 @@ public class PersonDAO {
         return accountTransaction;
     }
 
-    public Account getAccount(int id){
-        Account account = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Accounts WHERE id = ?")){
-                preparedStatement.setInt(1, id);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                account = new Account();
-                account.setId(rs.getInt("id"));
-                account.setNumber(rs.getString("number"));
-                account.setId_owner(rs.getInt("id_owner"));
-                account.setBalance(rs.getBigDecimal("balance"));
-                account.setStatus_account(rs.getString("status_account"));
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("No connection to DB");
-        }
-        return account;
-    }
 
-    public Person getPerson(int id_person){
-        Person person = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Persons WHERE id_person = ?")){
-                preparedStatement.setInt(1, id_person);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                person = new Person();
-                person.setId_person(rs.getInt("id_person"));
-                person.setFirstName(rs.getString("firstname"));
-                person.setLastName(rs.getString("lastname"));
-                person.setBirthday(rs.getDate("birthday"));
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("No connection to DB");
-        }
-        return person;
-    }
 
-    public Card getCard(int id){
-        Card card = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Cards WHERE id = ?")){
-                preparedStatement.setInt(1, id);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                card = new Card();
-                card.setId(rs.getInt("id"));
-                card.setNumber(rs.getString("number"));
-                card.setId_account(rs.getInt("id_account"));
-                card.setStatus_card(rs.getString("status_card"));
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("No connection to DB");
-        }
-        return card;
-    }
-
-    public List<Card> getAllCards(){
-        List<Card> list = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM cards")){
-                try (ResultSet rs = preparedStatement.executeQuery()){
-                    while (rs.next())
-                        list.add(new Card(rs.getInt("id"),
-                                rs.getString("number"),
-                                rs.getInt("id_account"),
-                                rs.getString("status_card")));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("No connection to DB");
-        }
-        return list;
-    }
-
-    public List<Card> getMyCards(int id_person){
-        List<Card> list = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT c.id, c.number, c.id_account, c.status_card FROM persons AS p " +
-                            "INNER JOIN accounts AS a ON a.id_owner = p.id_person " +
-                            "INNER JOIN cards AS c ON c.id_account = a.id " +
-                            "WHERE p.id_person = ?")){
-                preparedStatement.setInt(1, id_person);
-                try (ResultSet rs = preparedStatement.executeQuery()){
-                    while (rs.next())
-                        list.add(new Card(rs.getInt("id"),
-                                rs.getString("number"),
-                                rs.getInt("id_account"),
-                                rs.getString("status_card")));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("No connection to DB");
-        }
-        return list;
-    }
 
     public List<AccountTransaction> getAllAccountTransactions() {
         List<AccountTransaction> list = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+        try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AccountTransactions")){
                 try (ResultSet rs = preparedStatement.executeQuery()){
                     while (rs.next())
                         list.add(new AccountTransaction(rs.getInt("id"),
-                                rs.getInt("id_from"),
-                                rs.getInt("id_to"),
-                                rs.getBigDecimal("amount"),
-                                rs.getTimestamp("time"),
-                                rs.getString("status_transaction"),
-                                rs.getString("message")));
+                                                        rs.getInt("id_from"),
+                                                        rs.getInt("id_to"),
+                                                        rs.getBigDecimal("amount"),
+                                                        rs.getTimestamp("time"),
+                                                        rs.getString("status_transaction"),
+                                                        rs.getString("message")));
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -355,4 +390,34 @@ public class PersonDAO {
         }
         return list;
     }
+
+//    public void insert1() {
+//        try (Connection connection = dataSource.getConnection()){
+//            try (PreparedStatement preparedStatement = connection.prepareStatement
+//                    ("INSERT INTO owners (type_owner) VALUES (?)")) {
+//                preparedStatement.setString(1, "FIZ");
+//                preparedStatement.executeUpdate();
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("No connection to DB");
+//        }
+//    }
+//
+//    public void insert2() {
+//        try (Connection connection = dataSource.getConnection()){
+//            try (PreparedStatement preparedStatement = connection.prepareStatement
+//                    ("INSERT INTO owners (type_owner) VALUES (?)")) {
+//                preparedStatement.setString(1, "URO");
+//                preparedStatement.executeUpdate();
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("No connection to DB");
+//        }
+//    }
 }

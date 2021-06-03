@@ -2,6 +2,8 @@ package ru.zhenyaak.bankAPI.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Objects;
+
 public class Card {
 
     int id;
@@ -62,5 +64,18 @@ public class Card {
                 ", id_account=" + id_account +
                 ", status_card='" + status_card + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return id == card.id && id_account == card.id_account && Objects.equals(number, card.number) && Objects.equals(status_card, card.status_card);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, id_account, status_card);
     }
 }

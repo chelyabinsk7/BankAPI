@@ -120,7 +120,44 @@ public class EmployeeDAO {
         return account;
     }
 
-    public Card changeCardStatus(Card card) {
-        return null;
+    public String changeCardStatus(Card card) {
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("UPDATE Cards SET status_card = ? WHERE number = ?")){
+                preparedStatement.setString(1, card.getStatus_card());
+                preparedStatement.setString(2, card.getNumber());
+                preparedStatement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return card.getNumber();
+    }
+
+    public Card getCardByNumber(String number) {
+        Card card = null;
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+            try (PreparedStatement preparedStatement = connection.prepareStatement
+                    ("SELECT * FROM Cards WHERE number = ?")){
+                preparedStatement.setString(1, number);
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    card = new Card();
+                    rs.next();
+                    card.setId(rs.getInt("id"));
+                    card.setNumber(rs.getString("number"));
+                    card.setId_account(rs.getInt("id_account"));
+                    card.setStatus_card(rs.getString("status_card"));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("No connection to DB");
+        }
+        return card;
     }
 }

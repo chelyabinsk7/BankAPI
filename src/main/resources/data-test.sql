@@ -7,7 +7,7 @@ INSERT INTO OWNERS (TYPE_OWNER) VALUES ('FIZ'),
                                        ('UR'),
                                        ('UR');
 
-INSERT INTO PERSONS (id_person, FIRSTNAME, LASTNAME, BIRTHDAY) VALUES(1, 'Eugeny', 'Avdeev', '1995-06-23'),
+INSERT INTO PERSONS (id_person, FIRSTNAME, LASTNAME, BIRTHDAY) VALUES(1, 'Nastya', 'Morar', '1995-06-23'),
                                                                      (2, 'Stas', 'Sviridov', '1992-09-11'),
                                                                      (3, 'Sasha', 'Zhavo', '1993-11-28'),
                                                                      (4, 'Alina', 'Ismagilova', '1994-12-02'),

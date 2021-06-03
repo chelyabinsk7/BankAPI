@@ -1,10 +1,7 @@
 package ru.zhenyaak.bankAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.zhenyaak.bankAPI.controller.exceptions.card.CardNotFoundException;
 import ru.zhenyaak.bankAPI.entity.Account;
 import ru.zhenyaak.bankAPI.entity.Card;
@@ -51,14 +48,27 @@ http://localhost:8080/employee/newaccount
 /*
 http://localhost:8080/employee/changecardstatus
 {
-    "id": 2,
+    "number": "1234567812345678",
     "card_status": "OPEN"
 }
 */
     @PostMapping("/changecardstatus")
     public Card changeCardStatus(@RequestBody Card card){
+        Card changeCard = employeeService.changeCardStatus(card);
+        if (changeCard.getId() == 0)
+            throw new CardNotFoundException("Card with number = " + card.getNumber() + " not found");
+        return changeCard;
+    }
+
+
+/*
+http://localhost:8080/employee/cardbynumber/1234567812345678
+*/
+    @GetMapping("/cardbynumber/{number}")
+    public Card getCardByNumber(@PathVariable String number){
+        Card card = employeeService.getCardByNumber(number);
         if (card.getId() == 0)
-            throw new CardNotFoundException("Card with id = " + card.getId() + " not found");
-        return employeeService.changeCardStatus(card);
+            throw new CardNotFoundException("Card with number = " + number + " not found");
+        return card;
     }
 }

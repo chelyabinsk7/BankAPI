@@ -23,13 +23,13 @@ public class PersonRestController {
         this.personService = personService;
     }
 
-    /*
-    http://localhost:8080/person/newcard
-    {
-        "number": "1892567800456780",
-        "id_account": 3
-    }
-    */
+/*
+http://localhost:8080/person/newcard
+{
+    "number": "1892567800456780",
+    "id_account": 3
+}
+*/
     @PostMapping("/newcard")
     public Card createNewCard(@RequestBody Card card) {
         return personService.createNewCard(card);
@@ -44,7 +44,7 @@ http://localhost:8080/person/refill
 }
 */
     @PostMapping("/refill")
-    public AccountTransaction refill(@RequestBody AccountTransaction accountTransaction){
+    public AccountTransaction refill(@RequestBody AccountTransaction accountTransaction) {
         return personService.refill(accountTransaction);
     }
 
@@ -68,12 +68,8 @@ http://localhost:8080/person/allaccounttransactions
 http://localhost:8080/person/mycards/1
 */
     @GetMapping("/mycards/{id_person}")
-    public List<Card> myCards(@PathVariable int id_person){
-        Person person = personService.getPerson(id_person);
-        if (person.getId_person() == 0)
-            throw new PersonNotFoundException("Person with id_person = " + id_person + " not found");
-        List<Card> cards = personService.getMyCards(id_person);
-        return cards;
+    public List<Card> myCards(@PathVariable int id_person) {
+        return personService.getMyCards(id_person);
     }
 
 
@@ -81,27 +77,29 @@ http://localhost:8080/person/mycards/1
 http://localhost:8080/person/id/1
 */
     @GetMapping("/id/{id_person}")
-    public Person getPerson(@PathVariable int id_person){
-        Person person = personService.getPerson(id_person);
-        if (person.getId_person() == 0)
-            throw new PersonNotFoundException("Person with id_person = " + id_person + " not found");
-        return person;
+    public Person getPerson(@PathVariable int id_person) {
+        return personService.getPerson(id_person);
     }
 
 /*
 http://localhost:8080/person/card/1
 */
     @GetMapping("/card/{id}")
-    public Card getCard(@PathVariable int id){
-        Card card = personService.getCard(id);
-        return card;
+    public Card getCard(@PathVariable int id) {
+        return personService.getCard(id);
     }
 
 /*
 http://localhost:8080/person/account/1/balance
 */
     @GetMapping("/account/{id}/balance")
-    public BigDecimal getAccountBalance(@PathVariable int id){
+    public BigDecimal getAccountBalance(@PathVariable int id) {
         return personService.getAccountBalance(id);
     }
+
+
+//    @GetMapping("/insert")
+//    public void insert() {
+//        personService.insert();
+//    }
 }

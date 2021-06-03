@@ -27,6 +27,11 @@ public class EmployeeService {
     }
 
     public Card changeCardStatus(Card card) {
-        return employeeDAO.changeCardStatus(card);
+        employeeDAO.changeCardStatus(card);
+        return employeeDAO.getCardByNumber(card.getNumber());
+    }
+
+    public Card getCardByNumber(String number) {
+        return employeeDAO.getCardByNumber(number);
     }
 }
