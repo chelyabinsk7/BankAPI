@@ -2,11 +2,9 @@ package ru.zhenyaak.bankAPI.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.zhenyaak.bankAPI.controller.exceptions.person.PersonNotFoundException;
 import ru.zhenyaak.bankAPI.entity.AccountTransaction;
 import ru.zhenyaak.bankAPI.entity.Card;
 import ru.zhenyaak.bankAPI.entity.Person;
-import ru.zhenyaak.bankAPI.service.ContractorService;
 import ru.zhenyaak.bankAPI.service.PersonService;
 
 import java.math.BigDecimal;
@@ -78,7 +76,7 @@ http://localhost:8080/person/id/1
 */
     @GetMapping("/id/{id_person}")
     public Person getPerson(@PathVariable int id_person) {
-        return personService.getPerson(id_person);
+        return personService.getPersonById(id_person);
     }
 
 /*
@@ -86,7 +84,7 @@ http://localhost:8080/person/card/1
 */
     @GetMapping("/card/{id}")
     public Card getCard(@PathVariable int id) {
-        return personService.getCard(id);
+        return personService.getCardById(id);
     }
 
 /*

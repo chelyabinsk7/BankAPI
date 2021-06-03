@@ -83,4 +83,16 @@ public class AccountTransaction {
         this.message = message;
     }
 
+    @Override
+    public String toString() {
+        return "AccountTransaction{" +
+                "id=" + id +
+                ", id_from=" + id_from +
+                ", id_to=" + id_to +
+                ", amount=" + amount +
+                ", time=" + time +
+                ", status_transaction='" + status_transaction + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

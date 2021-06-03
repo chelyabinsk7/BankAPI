@@ -9,14 +9,11 @@ import ru.zhenyaak.bankAPI.entity.Card;
 import ru.zhenyaak.bankAPI.entity.Contractor;
 import ru.zhenyaak.bankAPI.entity.Person;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 @Repository
 public class EmployeeDAO {
-
-    private static final String URL = "jdbc:h2:file:/Users/u19215200/Documents/bankAPI/src/main/resources/data/bank;AUTO_SERVER=true";
-    private static final String USERNAME = "Eugeny";
-    private static final String PASSWORD = "12345678";
 
     static{
         try {
@@ -26,9 +23,15 @@ public class EmployeeDAO {
         }
     }
 
+    private DataSource dataSource;
+
+    public EmployeeDAO(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
+
     public int createNewPerson(Person person) {
         int id_owner = 0;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+        try (Connection connection = dataSource.getConnection()){
             connection.setAutoCommit(false);
             Savepoint savepoint = connection.setSavepoint("Savepoint");
             try (PreparedStatement preparedStatement = connection.prepareStatement
@@ -43,8 +46,7 @@ public class EmployeeDAO {
                 throwables.printStackTrace();
             }
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO persons VALUES (?, ?, ?, ?)")){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO persons VALUES (?, ?, ?, ?)")){
                 preparedStatement.setInt(1, id_owner);
                 preparedStatement.setString(2, person.getFirstName());
                 preparedStatement.setString(3, person.getLastName());
@@ -67,9 +69,8 @@ public class EmployeeDAO {
 
     public Person getPerson(int id_person) {
         Person person = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Persons WHERE id_person = ?")){
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Persons WHERE id_person = ?")){
                 preparedStatement.setInt(1, id_person);
                 try (ResultSet rs = preparedStatement.executeQuery()){
                     person = new Person();
@@ -90,9 +91,8 @@ public class EmployeeDAO {
     }
 
     public Account createNewAccount(Account account) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("INSERT INTO Accounts (number, id_owner) VALUES (?, ?)")){
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Accounts (number, id_owner) VALUES (?, ?)")){
                 preparedStatement.setString(1, account.getNumber());
                 preparedStatement.setInt(2, account.getId_owner());
                 preparedStatement.executeUpdate();
@@ -101,8 +101,7 @@ public class EmployeeDAO {
                 throw new AccountNotFoundException("Account creation failed because " + throwables);
             }
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Accounts WHERE number = ?")){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Accounts WHERE number = ?")){
                 preparedStatement.setString(1, account.getNumber());
                 try (ResultSet rs = preparedStatement.executeQuery()){
                     rs.next();
@@ -121,9 +120,8 @@ public class EmployeeDAO {
     }
 
     public String changeCardStatus(Card card) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("UPDATE Cards SET status_card = ? WHERE number = ?")){
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Cards SET status_card = ? WHERE number = ?")){
                 preparedStatement.setString(1, card.getStatus_card());
                 preparedStatement.setString(2, card.getNumber());
                 preparedStatement.executeUpdate();
@@ -139,9 +137,8 @@ public class EmployeeDAO {
 
     public Card getCardByNumber(String number) {
         Card card = null;
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
-            try (PreparedStatement preparedStatement = connection.prepareStatement
-                    ("SELECT * FROM Cards WHERE number = ?")){
+        try (Connection connection = dataSource.getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Cards WHERE number = ?")){
                 preparedStatement.setString(1, number);
                 try (ResultSet rs = preparedStatement.executeQuery()){
                     card = new Card();

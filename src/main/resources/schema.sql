@@ -59,9 +59,3 @@ CREATE TABLE accountTransactions(
     FOREIGN KEY (id_from) REFERENCES accounts(id) ON UPDATE CASCADE,
     FOREIGN KEY (id_to) REFERENCES accounts(id) ON UPDATE CASCADE
 );
-
-CREATE TABLE test(
-    id IDENTITY NOT NULL PRIMARY KEY,
-    name VARCHAR(50),
-    age INT
-);

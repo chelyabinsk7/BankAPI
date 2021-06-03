@@ -1,7 +1,5 @@
 package ru.zhenyaak.bankAPI.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Objects;
 
 public class Card {
@@ -22,7 +20,6 @@ public class Card {
         this.status_card = status_card;
     }
 
-//    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -39,7 +36,6 @@ public class Card {
         this.number = number;
     }
 
-//    @JsonIgnore
     public int getId_account() {
         return id_account;
     }

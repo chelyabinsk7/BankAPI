@@ -1,5 +1,7 @@
 package ru.zhenyaak.bankAPI.entity;
 
+import java.util.Objects;
+
 public class Contractor {
 
     int id_contractor;
@@ -47,5 +49,18 @@ public class Contractor {
                 ", name='" + name + '\'' +
                 ", inn='" + inn + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contractor that = (Contractor) o;
+        return id_contractor == that.id_contractor && Objects.equals(name, that.name) && Objects.equals(inn, that.inn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id_contractor, name, inn);
     }
 }

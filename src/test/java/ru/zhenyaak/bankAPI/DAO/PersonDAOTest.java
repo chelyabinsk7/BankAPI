@@ -1,21 +1,11 @@
 package ru.zhenyaak.bankAPI.DAO;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.zhenyaak.bankAPI.controller.exceptions.account.AccountNotFoundException;
 import ru.zhenyaak.bankAPI.controller.exceptions.accountTransaction.AccountTransactionException;
 import ru.zhenyaak.bankAPI.controller.exceptions.card.CardNotFoundException;
@@ -25,12 +15,10 @@ import ru.zhenyaak.bankAPI.entity.Account;
 import ru.zhenyaak.bankAPI.entity.AccountTransaction;
 import ru.zhenyaak.bankAPI.entity.Card;
 import ru.zhenyaak.bankAPI.entity.Person;
-
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PersonDAOTest {
 
     private DataSource dataSource;
@@ -44,42 +32,42 @@ public class PersonDAOTest {
     }
 
     @Test
-    public void getPerson(){
+    public void getPersonById(){
         PersonDAO personDAO = new PersonDAO(dataSource);
         Person person = new Person(1, "Nastya", "Morar", Date.valueOf("1995-06-23"));
-        assertEquals(person, personDAO.getPerson(1));
+        assertEquals(person, personDAO.getPersonById(1));
     }
 
     @Test
-    public void getPersonWithException(){
+    public void getPersonByIdWithException(){
         PersonDAO personDAO = new PersonDAO(dataSource);
-        Assertions.assertThrows(PersonNotFoundException.class, () -> {personDAO.getPerson(1000);});
+        Assertions.assertThrows(PersonNotFoundException.class, () -> {personDAO.getPersonById(1000);});
     }
 
     @Test
-    public void getAccount(){
+    public void getAccountById(){
         PersonDAO personDAO = new PersonDAO(dataSource);
         Account account = new Account (1, "12345672901234567890", 1, BigDecimal.valueOf(1000), "OPEN");
-        assertEquals(account, personDAO.getAccount(1));
+        assertEquals(account, personDAO.getAccountById(1));
     }
 
     @Test
-    public void getAccountWithException(){
+    public void getAccountByIdWithException(){
         PersonDAO personDAO = new PersonDAO(dataSource);
-        Assertions.assertThrows(AccountNotFoundException.class, () -> {personDAO.getAccount(1000);});
+        Assertions.assertThrows(AccountNotFoundException.class, () -> {personDAO.getAccountById(1000);});
     }
 
     @Test
-    public void getCard(){
+    public void getCardById(){
         PersonDAO personDAO = new PersonDAO(dataSource);
         Card card = new Card (1, "1234567812345677", 1, "OPEN");
-        assertEquals(card, personDAO.getCard(1));
+        assertEquals(card, personDAO.getCardById(1));
     }
 
     @Test
-    public void getCardWithException(){
+    public void getCardByIdWithException(){
         PersonDAO personDAO = new PersonDAO(dataSource);
-        Assertions.assertThrows(CardNotFoundException.class, () -> {personDAO.getCard(1000);});
+        Assertions.assertThrows(CardNotFoundException.class, () -> {personDAO.getCardById(1000);});
     }
 
     @Test
@@ -122,7 +110,7 @@ public class PersonDAOTest {
     public void createNewCardWithCardNotFoundException(){
         PersonDAO personDAO = new PersonDAO(dataSource);
         Card card = new Card();
-        card.setNumber("1234567812345678");
+        card.setNumber("1234567812345678"); // С таким номером уже существует
         card.setId_account(5);
         Assertions.assertThrows(CardNotFoundException.class, () -> {personDAO.createNewCard(card);});
     }
@@ -160,13 +148,13 @@ public class PersonDAOTest {
         accountTransaction.setId_from(1);
         accountTransaction.setId_to(2);
         accountTransaction.setAmount(BigDecimal.valueOf(100.9));
-        BigDecimal balance_from_old = personDAO.getAccount(1).getBalance();
-        BigDecimal balance_from_new = personDAO.getAccount(2).getBalance();
+        BigDecimal balance_from_old = personDAO.getAccountById(1).getBalance();
+        BigDecimal balance_from_new = personDAO.getAccountById(2).getBalance();
         AccountTransaction accountTransactionNew = personDAO.refill(accountTransaction);
         assertEquals(accountTransactionNew.getStatus_transaction(), "YES");
         assertEquals(accountTransactionNew.getMessage(), "Operation was successfull");
-        assertEquals(personDAO.getAccount(1).getBalance(), balance_from_old.subtract(BigDecimal.valueOf(100.9)));
-        assertEquals(personDAO.getAccount(2).getBalance(), balance_from_new.add(BigDecimal.valueOf(100.9)));
+        assertEquals(personDAO.getAccountById(1).getBalance(), balance_from_old.subtract(BigDecimal.valueOf(100.9)));
+        assertEquals(personDAO.getAccountById(2).getBalance(), balance_from_new.add(BigDecimal.valueOf(100.9)));
     }
 
     @Test
@@ -176,13 +164,13 @@ public class PersonDAOTest {
         accountTransaction.setId_from(4);
         accountTransaction.setId_to(2);
         accountTransaction.setAmount(BigDecimal.valueOf(100.9));
-        BigDecimal balance_from_old = personDAO.getAccount(4).getBalance();
-        BigDecimal balance_from_new = personDAO.getAccount(2).getBalance();
+        BigDecimal balance_from_old = personDAO.getAccountById(4).getBalance();
+        BigDecimal balance_from_new = personDAO.getAccountById(2).getBalance();
         AccountTransaction accountTransactionNew = personDAO.refill(accountTransaction);
         assertEquals(accountTransactionNew.getStatus_transaction(), "NO");
         assertEquals(accountTransactionNew.getMessage(), "Operation failed, account_from is close");
-        assertEquals(personDAO.getAccount(1).getBalance(), balance_from_old);
-        assertEquals(personDAO.getAccount(2).getBalance(), balance_from_new);
+        assertEquals(personDAO.getAccountById(1).getBalance(), balance_from_old);
+        assertEquals(personDAO.getAccountById(2).getBalance(), balance_from_new);
     }
 
     @Test
@@ -192,13 +180,13 @@ public class PersonDAOTest {
         accountTransaction.setId_from(1);
         accountTransaction.setId_to(4);
         accountTransaction.setAmount(BigDecimal.valueOf(100.9));
-        BigDecimal balance_from_old = personDAO.getAccount(4).getBalance();
-        BigDecimal balance_from_new = personDAO.getAccount(2).getBalance();
+        BigDecimal balance_from_old = personDAO.getAccountById(4).getBalance();
+        BigDecimal balance_from_new = personDAO.getAccountById(2).getBalance();
         AccountTransaction accountTransactionNew = personDAO.refill(accountTransaction);
         assertEquals(accountTransactionNew.getStatus_transaction(), "NO");
         assertEquals(accountTransactionNew.getMessage(), "Operation failed, account_to is close");
-        assertEquals(personDAO.getAccount(1).getBalance(), balance_from_old);
-        assertEquals(personDAO.getAccount(2).getBalance(), balance_from_new);
+        assertEquals(personDAO.getAccountById(1).getBalance(), balance_from_old);
+        assertEquals(personDAO.getAccountById(2).getBalance(), balance_from_new);
     }
 
     @Test
@@ -208,13 +196,13 @@ public class PersonDAOTest {
         accountTransaction.setId_from(1);
         accountTransaction.setId_to(2);
         accountTransaction.setAmount(BigDecimal.valueOf(1000.9));
-        BigDecimal balance_from_old = personDAO.getAccount(1).getBalance();
-        BigDecimal balance_from_new = personDAO.getAccount(2).getBalance();
+        BigDecimal balance_from_old = personDAO.getAccountById(1).getBalance();
+        BigDecimal balance_from_new = personDAO.getAccountById(2).getBalance();
         AccountTransaction accountTransactionNew = personDAO.refill(accountTransaction);
         assertEquals(accountTransactionNew.getStatus_transaction(), "NO");
         assertEquals(accountTransactionNew.getMessage(), "Operation failed, not enough money in the account");
-        assertEquals(personDAO.getAccount(1).getBalance(), balance_from_old);
-        assertEquals(personDAO.getAccount(2).getBalance(), balance_from_new);
+        assertEquals(personDAO.getAccountById(1).getBalance(), balance_from_old);
+        assertEquals(personDAO.getAccountById(2).getBalance(), balance_from_new);
     }
 
     @Test

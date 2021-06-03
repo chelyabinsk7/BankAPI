@@ -10,11 +10,10 @@ import ru.zhenyaak.bankAPI.entity.Person;
 @Service
 public class EmployeeService {
 
-
     private final EmployeeDAO employeeDAO;
 
     @Autowired
-    public EmployeeService (EmployeeDAO employeeDAO){
+    public EmployeeService (EmployeeDAO employeeDAO) {
         this.employeeDAO = employeeDAO;
     }
 

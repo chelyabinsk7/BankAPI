@@ -29,20 +29,20 @@ public class PersonDAO {
         this.dataSource = dataSource;
     }
 
-
-    public Person getPerson(int id_person){
+    public Person getPersonById(int id_person){
         Person person = null;
         try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM Persons WHERE id_person = ?")){
                 preparedStatement.setInt(1, id_person);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                person = new Person();
-                person.setId_person(rs.getInt("id_person"));
-                person.setFirstName(rs.getString("firstname"));
-                person.setLastName(rs.getString("lastname"));
-                person.setBirthday(rs.getDate("birthday"));
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    rs.next();
+                    person = new Person();
+                    person.setId_person(rs.getInt("id_person"));
+                    person.setFirstName(rs.getString("firstname"));
+                    person.setLastName(rs.getString("lastname"));
+                    person.setBirthday(rs.getDate("birthday"));
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 throw new PersonNotFoundException("Person with id_person = " + id_person + " not found. More details: " + throwables);
@@ -54,7 +54,7 @@ public class PersonDAO {
         return person;
     }
 
-    public Account getAccount(int id){
+    public Account getAccountById(int id){
         Account account = null;
         try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement
@@ -80,19 +80,20 @@ public class PersonDAO {
         return account;
     }
 
-    public Card getCard(int id){
+    public Card getCardById(int id){
         Card card = null;
         try (Connection connection = dataSource.getConnection()){
             try (PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM Cards WHERE id = ?")){
                 preparedStatement.setInt(1, id);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                card = new Card();
-                card.setId(rs.getInt("id"));
-                card.setNumber(rs.getString("number"));
-                card.setId_account(rs.getInt("id_account"));
-                card.setStatus_card(rs.getString("status_card"));
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    rs.next();
+                    card = new Card();
+                    card.setId(rs.getInt("id"));
+                    card.setNumber(rs.getString("number"));
+                    card.setId_account(rs.getInt("id_account"));
+                    card.setStatus_card(rs.getString("status_card"));
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 throw new CardNotFoundException("Card with id = " + id + " not found. More details" + throwables);
@@ -134,17 +135,17 @@ public class PersonDAO {
         List<Card> list = new ArrayList<>();
         Person person = null;
         try (Connection connection = dataSource.getConnection()){
-
             try (PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM Persons WHERE id_person = ?")){
                 preparedStatement.setInt(1, id_person);
-                ResultSet rs = preparedStatement.executeQuery();
-                rs.next();
-                person = new Person();
-                person.setId_person(rs.getInt("id_person"));
-                person.setFirstName(rs.getString("firstname"));
-                person.setLastName(rs.getString("lastname"));
-                person.setBirthday(rs.getDate("birthday"));
+                try (ResultSet rs = preparedStatement.executeQuery()){
+                    rs.next();
+                    person = new Person();
+                    person.setId_person(rs.getInt("id_person"));
+                    person.setFirstName(rs.getString("firstname"));
+                    person.setLastName(rs.getString("lastname"));
+                    person.setBirthday(rs.getDate("birthday"));
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 throw new PersonNotFoundException("Person with id_person = " + id_person + " not found. More details: " + throwables);
@@ -252,7 +253,6 @@ public class PersonDAO {
         return accountTransaction;
     }
 
-
     public List<AccountTransaction> getAllAccountTransactions() {
         List<AccountTransaction> list = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()){
@@ -289,7 +289,6 @@ public class PersonDAO {
 
         try (Connection connection = dataSource.getConnection()){
             connection.setAutoCommit(false);
-
             try (PreparedStatement preparedStatement = connection.prepareStatement
                         ("SELECT * FROM Accounts WHERE id = ?")){
                 preparedStatement.setInt(1, accountTransaction.getId_from());
@@ -403,35 +402,4 @@ public class PersonDAO {
         return accountTransaction;
     }
 
-
-
-//    public void insert1() {
-//        try (Connection connection = dataSource.getConnection()){
-//            try (PreparedStatement preparedStatement = connection.prepareStatement
-//                    ("INSERT INTO owners (type_owner) VALUES (?)")) {
-//                preparedStatement.setString(1, "FIZ");
-//                preparedStatement.executeUpdate();
-//            } catch (SQLException throwables) {
-//                throwables.printStackTrace();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("No connection to DB");
-//        }
-//    }
-//
-//    public void insert2() {
-//        try (Connection connection = dataSource.getConnection()){
-//            try (PreparedStatement preparedStatement = connection.prepareStatement
-//                    ("INSERT INTO owners (type_owner) VALUES (?)")) {
-//                preparedStatement.setString(1, "URO");
-//                preparedStatement.executeUpdate();
-//            } catch (SQLException throwables) {
-//                throwables.printStackTrace();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("No connection to DB");
-//        }
-//    }
 }

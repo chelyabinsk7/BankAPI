@@ -6,7 +6,6 @@ import ru.zhenyaak.bankAPI.controller.exceptions.card.CardNotFoundException;
 import ru.zhenyaak.bankAPI.entity.Account;
 import ru.zhenyaak.bankAPI.entity.Card;
 import ru.zhenyaak.bankAPI.entity.Person;
-import ru.zhenyaak.bankAPI.service.ContractorService;
 import ru.zhenyaak.bankAPI.service.EmployeeService;
 
 @RestController

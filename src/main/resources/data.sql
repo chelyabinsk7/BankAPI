@@ -40,7 +40,3 @@ INSERT INTO ACCOUNTTRANSACTIONS (ID_FROM, ID_TO, AMOUNT) VALUES (1, 2, 1000),
                                                                 (8, 10, 500),
                                                                 (8, 5, 100),
                                                                 (5, 8, 499.50);
-
-
-INSERT INTO test (name, age) VALUES ('John', 67),
-                                    ('Ted', 43);
