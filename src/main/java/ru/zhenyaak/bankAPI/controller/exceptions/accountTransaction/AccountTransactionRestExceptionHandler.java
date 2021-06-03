@@ -1,17 +1,18 @@
-package ru.zhenyaak.bankAPI.controller.exceptions.contractor;
+package ru.zhenyaak.bankAPI.controller.exceptions.accountTransaction;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.zhenyaak.bankAPI.controller.exceptions.account.AccountTransactionErrorResponse;
+import ru.zhenyaak.bankAPI.controller.exceptions.account.AccountNotFoundException;
 
 @ControllerAdvice
-public class ContractorRestExceptionHandler {
+public class AccountTransactionRestExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<AccountTransactionErrorResponse>
-    handleException(ContractorNotFoundException exc){
+    handleException(AccountTransactionException exc){
 
         AccountTransactionErrorResponse error = new AccountTransactionErrorResponse(
                 HttpStatus.NOT_FOUND.value(),

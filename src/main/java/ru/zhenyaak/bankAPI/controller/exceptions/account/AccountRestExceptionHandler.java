@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AccountRestExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<CardErrorResponse>
+    public ResponseEntity<AccountTransactionErrorResponse>
     handleException(AccountNotFoundException exc){
 
-        CardErrorResponse error = new CardErrorResponse(
+        AccountTransactionErrorResponse error = new AccountTransactionErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exc.getMessage(),
                 System.currentTimeMillis());
@@ -21,10 +21,10 @@ public class AccountRestExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<CardErrorResponse>
+    public ResponseEntity<AccountTransactionErrorResponse>
     handleException(Exception exc){
 
-        CardErrorResponse error = new CardErrorResponse(
+        AccountTransactionErrorResponse error = new AccountTransactionErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 exc.getMessage(),
                 System.currentTimeMillis());

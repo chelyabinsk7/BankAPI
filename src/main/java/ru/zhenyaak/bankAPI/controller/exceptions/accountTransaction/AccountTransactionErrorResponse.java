@@ -1,15 +1,15 @@
-package ru.zhenyaak.bankAPI.controller.exceptions.account;
+package ru.zhenyaak.bankAPI.controller.exceptions.accountTransaction;
 
-public class CardErrorResponse {
+public class AccountTransactionErrorResponse {
     private int status;
     private String message;
     private long timestamp;
 
-    public CardErrorResponse() {
+    public AccountTransactionErrorResponse() {
 
     }
 
-    public CardErrorResponse(int status, String message, long timestamp) {
+    public AccountTransactionErrorResponse(int status, String message, long timestamp) {
         this.status = status;
         this.message = message;
         this.timestamp = timestamp;
