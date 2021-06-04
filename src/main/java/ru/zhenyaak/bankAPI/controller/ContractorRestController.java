@@ -34,7 +34,7 @@ http://localhost:8080/contractor/newcontractor
 http://localhost:8080/contractor/allcontractors
 */
     @GetMapping("/allcontractors")
-    public List<Contractor> allContractors() {
+    public List<Contractor> getAllContractors() {
         return contractorService.getAllContractors();
     }
 
