@@ -4,11 +4,9 @@ import org.springframework.stereotype.Repository;
 import ru.zhenyaak.bankAPI.controller.exceptions.account.AccountNotFoundException;
 import ru.zhenyaak.bankAPI.controller.exceptions.card.CardChangeStatusException;
 import ru.zhenyaak.bankAPI.controller.exceptions.card.CardNotFoundException;
-import ru.zhenyaak.bankAPI.controller.exceptions.contractor.ContractorNotFoundException;
 import ru.zhenyaak.bankAPI.controller.exceptions.person.PersonNotFoundException;
 import ru.zhenyaak.bankAPI.entity.Account;
 import ru.zhenyaak.bankAPI.entity.Card;
-import ru.zhenyaak.bankAPI.entity.Contractor;
 import ru.zhenyaak.bankAPI.entity.Person;
 
 import javax.sql.DataSource;

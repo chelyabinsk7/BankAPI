@@ -95,9 +95,4 @@ http://localhost:8080/person/account/1/balance
         return personService.getAccountBalance(id);
     }
 
-
-//    @GetMapping("/insert")
-//    public void insert() {
-//        personService.insert();
-//    }
 }
