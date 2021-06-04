@@ -48,15 +48,12 @@ http://localhost:8080/employee/newaccount
 http://localhost:8080/employee/changecardstatus
 {
     "number": "1234567812345678",
-    "card_status": "OPEN"
+    "status_card": "OPEN"
 }
 */
     @PostMapping("/changecardstatus")
     public Card changeCardStatus(@RequestBody Card card){
-        Card changeCard = employeeService.changeCardStatus(card);
-        if (changeCard.getId() == 0)
-            throw new CardNotFoundException("Card with number = " + card.getNumber() + " not found");
-        return changeCard;
+        return employeeService.changeCardStatus(card);
     }
 
 
@@ -65,9 +62,6 @@ http://localhost:8080/employee/cardbynumber/1234567812345678
 */
     @GetMapping("/cardbynumber/{number}")
     public Card getCardByNumber(@PathVariable String number){
-        Card card = employeeService.getCardByNumber(number);
-        if (card.getId() == 0)
-            throw new CardNotFoundException("Card with number = " + number + " not found");
-        return card;
+        return employeeService.getCardByNumber(number);
     }
 }

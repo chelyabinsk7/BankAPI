@@ -18,7 +18,7 @@ public class EmployeeService {
     }
 
     public Person createNewPerson(Person person) {
-        return employeeDAO.getPerson(employeeDAO.createNewPerson(person));
+        return employeeDAO.getPersonById(employeeDAO.createNewPerson(person));
     }
 
     public Account createNewAccount(Account account) {
@@ -26,8 +26,7 @@ public class EmployeeService {
     }
 
     public Card changeCardStatus(Card card) {
-        employeeDAO.changeCardStatus(card);
-        return employeeDAO.getCardByNumber(card.getNumber());
+        return employeeDAO.changeCardStatus(card);
     }
 
     public Card getCardByNumber(String number) {

@@ -19,13 +19,13 @@ public class ContractorRestController {
         this.contractorService = contractorService;
     }
 
-    /*
-    http://localhost:8080/contractor/newcontractor
-    {
-        "name": "Sberbank",
-        "inn": "8888222200"
-    }
-    */
+/*
+http://localhost:8080/contractor/newcontractor
+{
+    "name": "Sberbank",
+    "inn": "8888222200"
+}
+*/
     @PostMapping("/newcontractor")
     public Contractor createNewContractor(@RequestBody Contractor contractor) {
         return contractorService.createNewContractor(contractor);
@@ -46,7 +46,7 @@ http://localhost:8080/contractor/allcontractors
 
 /*
 http://localhost:8080/contractor/id/6
- */
+*/
     @GetMapping("/id/{id_contractor}")
     public Contractor getContractorById(@PathVariable int id_contractor){
         Contractor contractor = contractorService.getContractorById(id_contractor);
@@ -62,7 +62,7 @@ http://localhost:8080/contractor/refill
     "id_to": 10,
     "amount": "100.9"
 }
- */
+*/
     @PostMapping("/refill")
     public AccountTransaction refill(@RequestBody AccountTransaction accountTransaction){
         return contractorService.refill(accountTransaction);
